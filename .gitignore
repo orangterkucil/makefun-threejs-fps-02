@@ -3,3 +3,4 @@
 .diag-profile-*/
 node_modules/
 .DS_Store
+transcripts.tar.gz

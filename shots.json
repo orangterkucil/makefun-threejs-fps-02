@@ -1,0 +1,10 @@
+[
+  { "name": "01-cover", "pose": "breach", "wait": 1600,
+    "note": "Firefight over an armed charge: HUD, objective and retake progress all live." },
+  { "name": "02-overview", "pose": "overview", "wait": 1200,
+    "note": "The whole map from above: three lanes, two pump sites, operators mid-round." },
+  { "name": "03-ads", "pose": "ads", "wait": 1800,
+    "note": "Weapon detail: iron sights aligned down the valve hall at 14m." },
+  { "name": "04-debrief", "pose": "debrief", "wait": 1400,
+    "note": "Round-end board: winner, reason, payout and the match score." }
+]

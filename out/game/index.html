@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SALTLINE · Pump House Seven</title>
+<link rel="stylesheet" href="./src/style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js"}}</script>
+</head>
+<body>
+<!-- The renderer attaches its canvas to #stage; everything else here is the HUD the judge reads. -->
+<div id="stage"></div>
+<div id="damage"></div>
+
+<div id="hud" aria-hidden="true">
+  <header class="brand">SALTLINE<span>PUMP HOUSE SEVEN / 3 V 3</span></header>
+
+  <div class="scoreline">
+    <div class="side ally"><span>SLACKWATER</span><b id="score-ally">00</b></div>
+    <div class="clock">
+      <small id="round-label">ROUND 01</small>
+      <strong id="timer">1:45</strong>
+      <small id="phase-label">PREPARATION</small>
+    </div>
+    <div class="side enemy"><b id="score-enemy">00</b><span>TIDEWATCH</span></div>
+  </div>
+
+  <div class="radar"><canvas id="radar" width="200" height="220"></canvas><div>PUMP HOUSE 7 <span id="zone">SOUTH YARD</span></div></div>
+
+  <div id="objective">
+    <small id="objective-kicker">MISSION / BREACH</small>
+    <p id="objective-text">Escort the charge to a pump site</p>
+    <span id="objective-sub">Two sites · A west tanks · B east gallery</span>
+  </div>
+
+  <section id="trace">
+    <header>SIGNAL TRACE <span>TIDEWATCH INTENT</span></header>
+    <ul id="trace-list"></ul>
+    <footer id="trace-note">Telemetry from the charge uplink</footer>
+  </section>
+
+  <div id="killfeed"></div>
+
+  <div id="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+  <div id="hitmarker">×</div>
+
+  <div id="progress" hidden><span id="progress-label">ARMING</span><div><i id="progress-fill"></i></div></div>
+
+  <footer class="console">
+    <div class="vitals"><small>VITALS</small><div><strong id="health">100</strong><span class="armor">◇ <b id="armor">50</b></span></div><i><b id="health-bar"></b></i></div>
+    <div class="funds"><small>FUNDS</small><b id="money">$ 800</b><span>B / ARMORY</span></div>
+    <div class="loadout"><small id="weapon-name">PIPIT / P13</small><div><strong id="mag">13</strong><span id="reserve">/ 52</span></div><span id="utility">2 × BRINE</span></div>
+  </footer>
+
+  <div class="statusline"><span id="status">STEADY</span><span class="keys">WASD MOVE / CTRL CROUCH / SHIFT WALK / RMB AIM / R RELOAD / G FRAG / F VEIL / E PLANT / B BUY</span><span id="stance">ADS 1.54×</span></div>
+</div>
+
+<section id="buy" hidden>
+  <header><span>SLACKWATER / FIELD SUPPLY</span><span>B TO CLOSE</span></header>
+  <h1>Buy before the breach.</h1>
+  <p>Preparation is the only window. Pick a primary, plate up, carry utility.</p>
+  <div class="items">
+    <article data-slot="1"><kbd>1</kbd><h2>TIDEGLASS</h2><small>TR-7 / RIFLE</small><p>33 dmg · 30 rounds<br>One-tap angles, long lanes.</p><b>$ 2,700</b></article>
+    <article data-slot="2"><kbd>2</kbd><h2>MORAY</h2><small>M9 / SUBMACHINE</small><p>22 dmg · 35 rounds<br>Fast entries, tight corners.</p><b>$ 1,500</b></article>
+    <article data-slot="3"><kbd>3</kbd><h2>SALTMAKER</h2><small>S8 / SCATTERGUN</small><p>9 pellets · 7 shells<br>Hold a corner, mind the range.</p><b>$ 1,900</b></article>
+    <article data-slot="4"><kbd>4</kbd><h2>PIPIT</h2><small>P13 / SIDEARM</small><p>28 dmg · 13 rounds<br>Free. Always loaded.</p><b>FREE</b></article>
+    <article data-slot="5"><kbd>5</kbd><h2>PLATE VEST</h2><small>ARMOUR</small><p>100 armour<br>Soaks the first exchange.</p><b>$ 650</b></article>
+    <article data-slot="6"><kbd>6</kbd><h2>FIELD KIT</h2><small>UTILITY</small><p>2 × brine · 1 × veil<br>Clear a corner, break a sightline.</p><b>$ 600</b></article>
+  </div>
+  <footer>PRESS 1–6 TO REQUISITION <span id="buy-funds">FUNDS $ 800</span></footer>
+</section>
+
+<section id="start">
+  <small>PUMP HOUSE SEVEN / SECTOR 04</small>
+  <h1>SALTLINE</h1>
+  <p>A decommissioned tidal station on a dead salt pan. Slackwater brings the charge; Tidewatch holds the pumps.</p>
+  <div class="brief">
+    <div><b>BREACH</b> Take a site, arm the charge, keep it armed.</div>
+    <div><b>DEFEND</b> They will rotate, hold angles and retake.</div>
+    <div><b>ECONOMY</b> Rounds pay. Spend it before the horn.</div>
+  </div>
+  <button id="play" type="button">ENTER THE PUMP HOUSE</button>
+  <aside>Mouse aim · Click fire · RMB aim down sights<br>WASD move · Space jump · Ctrl crouch · Shift walk · B buy · E plant · G frag · F veil</aside>
+</section>
+
+<div id="pause" hidden>OPERATION PAUSED <span>Click the scene to resume</span></div>
+
+<section id="result" hidden>
+  <header><span id="result-kicker">ROUND 04</span><span id="result-score">SLACKWATER 2 — 2 TIDEWATCH</span></header>
+  <h1 id="result-title">SITE SECURED</h1>
+  <p id="result-reason">The charge went off inside the west tanks.</p>
+  <table><thead><tr><th>OPERATOR</th><th>K</th><th>D</th><th>DMG</th><th>ARM</th><th>STATUS</th></tr></thead><tbody id="board-body"></tbody></table>
+  <footer><span id="result-next">NEXT ROUND IN 6</span><span id="result-economy">PAYOUT $ 3,250</span></footer>
+</section>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

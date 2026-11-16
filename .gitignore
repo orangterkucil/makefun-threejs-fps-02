@@ -1,0 +1,5 @@
+# Build artefacts, never part of the entry.
+.capture-profile-*/
+.diag-profile-*/
+node_modules/
+.DS_Store
